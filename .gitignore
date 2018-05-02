@@ -1,0 +1,7 @@
+.vs
+Debug
+Release
+*.vcproj.filters
+*.VC.db
+*.opendb
+*.sdf
