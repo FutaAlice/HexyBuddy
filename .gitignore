@@ -1,7 +1,12 @@
 .vs
 Debug
 Release
-*.vcproj.filters
-*.VC.db
-*.opendb
+*.vcxproj.user
+*.filters
 *.sdf
+*.suo
+*.opendb
+*.opensdf
+*.db
+ipch
+*.dSYM
