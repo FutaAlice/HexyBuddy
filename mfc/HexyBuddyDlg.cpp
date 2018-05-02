@@ -1,7 +1,3 @@
-
-// HexyBuddyDlg.cpp : implementation file
-//
-
 #include "stdafx.h"
 #include "HexyBuddy.h"
 #include "HexyBuddyDlg.h"
@@ -9,12 +5,6 @@
 #include "tlhelp32.h"
 #include "shlwapi.h"
 #include <functional>
-
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
 
 // CHexyBuddyDlg dialog
 struct scopedGuard
@@ -96,10 +86,6 @@ BOOL CHexyBuddyDlg::OnInitDialog()
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
-// If you add a minimize button to your dialog, you will need the code below
-//  to draw the icon.  For MFC applications using the document/view model,
-//  this is automatically done for you by the framework.
-
 void CHexyBuddyDlg::OnPaint()
 {
 	if (IsIconic())
@@ -125,18 +111,14 @@ void CHexyBuddyDlg::OnPaint()
 	}
 }
 
-// The system calls this function to obtain the cursor to display while the user drags
-//  the minimized window.
 HCURSOR CHexyBuddyDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
 
-
 void CHexyBuddyDlg::OnTimer(UINT_PTR nIDEvent)
 {
-	// TODO: Add your message handler code here and/or call default
 	if (nIDEvent==WM_MSG_UPDATE_DATA)
 	{
 		updateData();

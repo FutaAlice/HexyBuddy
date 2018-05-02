@@ -1,7 +1,3 @@
-
-// HexyBuddyDlg.h : header file
-//
-
 #pragma once
 #include "afxcmn.h"
 #include "afxwin.h"
