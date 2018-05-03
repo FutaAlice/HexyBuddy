@@ -113,15 +113,19 @@ std::vector<std::tuple<int, int>> HexyHandleImpl::getRec()
 bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos)
 {
     auto rec = getRec();
-    int setCol = get<0>(pos);
-    int setRow = get<1>(pos);
+    int targetCol = get<0>(pos);
+    int targetRow = get<1>(pos);
+    if (0 > targetCol || boardSize_ <= targetCol ||
+        0 > targetRow || boardSize_ <= targetRow)
+        return false;
+
     for (auto x : rec)
     {
-        if (setCol == get<0>(x) && setRow == get<1>(x))
+        if (targetCol == get<0>(x) && targetRow == get<1>(x))
             return false;
     }
 
-    int index = (setRow + 1) * (boardSize_ + 2) + (setCol + 1);
+    int index = (targetRow + 1) * (boardSize_ + 2) + (targetCol + 1);
     double x = canvasCenterX_ + boardRatio_ * hexygonCenterPairList_[2 * index];
     double y = canvasCenterY_ + boardRatio_ * hexygonCenterPairList_[2 * index + 1];
     LPARAM mousePos = short(x) | short(y) << 16;

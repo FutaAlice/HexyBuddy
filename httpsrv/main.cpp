@@ -114,7 +114,7 @@ int main()
             {
                 errCode = 400;
                 stringstream ss;
-                ss << "Position:(col " << col << ", row " << row << ") not empty!";
+                ss << "Position:(col " << col << ", row " << row << ") illegal not empty!";
                 errString = ss.str();
                 break;
             }
