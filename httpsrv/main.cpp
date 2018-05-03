@@ -55,8 +55,13 @@ int main()
 
     srv.get("/init", [&](const Request &req, Response &res) {
         bool success = handle.init();
-        string s = success ? "success" : "fail";
-        res.set_content(s, "application/json");
+        int errCode = success ? 200 : 400;
+        string errString = success ? "" : "Fail, Hexy process not found.";
+        Json obj = Json::object{
+            { "errCode", errCode },
+            { "errString", errString },
+        };
+        res.set_content(obj.dump(), "application/json");
     });
 
     srv.get("/rec", [&](const Request &req, Response &res) {
