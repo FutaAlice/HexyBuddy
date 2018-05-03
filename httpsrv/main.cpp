@@ -96,20 +96,36 @@ int main()
                 errString = "Hexy process do not exist! Plz open Hexy before query.";
                 break;
             }
-            Json obj = Json::parse(req.body, errString);
-            if (!obj.is_object())
+            int row, col;
+            if ("POST" == req.method)
             {
-                errCode = 400;
-                break;
+                Json obj = Json::parse(req.body, errString);
+                if (!obj.is_object())
+                {
+                    errCode = 400;
+                    break;
+                }
+                if (!obj["row"].is_number() || !obj["col"].is_number())
+                {
+                    errCode = 400;
+                    errString = R"(Param row/col is required.)";
+                    break;
+                }
+                row = obj["row"].int_value();
+                col = obj["col"].int_value();
             }
-            if (!obj["row"].is_number() || !obj["col"].is_number())
+            else // GET
             {
-                errCode = 400;
-                errString = R"(Param row/col is required.)";
-                break;
+                if (req.params.end() == req.params.find("row") ||
+                    req.params.end() == req.params.find("col"))
+                {
+                    errCode = 400;
+                    errString = R"(Param row/col is required.)";
+                    break;
+                }
+                row = atoi(req.params.find("row")->second.c_str());
+                col = atoi(req.params.find("col")->second.c_str());
             }
-            int row = obj["row"].int_value();
-            int col = obj["col"].int_value();
             if (!handle.setPiece(make_tuple(col, row)))
             {
                 errCode = 400;
@@ -126,7 +142,7 @@ int main()
         res.set_content(obj.dump(), "application/json");
     };
     srv.post("/set", setReqHandler);
-    // srv.get("/set", setReqHandler);
+    srv.get("/set", setReqHandler);
 
     srv.listen("localhost", 8080);
 }
