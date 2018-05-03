@@ -36,7 +36,7 @@ struct Point
     Json to_json() const
     {
         return Json::object {
-            {"col", get<0>(pos)}, {"row", get<1>(pos)}
+            { "col", get<0>(pos) }, { "row", get<1>(pos) }
         };
     }
 };
@@ -86,11 +86,47 @@ int main()
         res.set_content(obj.dump(), "application/json");
     });
     
-    srv.post("/set", [&](const Request &req, Response &res) {
-        handle.setPiece(make_tuple(5, 5));
-        cout << dump_headers(req.headers) << endl;
-        cout << req.body << endl;
-        res.set_content("ok", "text/plain");
-    });
+    Server::Handler setReqHandler = [&](const Request &req, Response &res) {
+        int errCode = 200;
+        string errString = "";
+        do {
+            if (!handle.init())
+            {
+                errCode = 400;
+                errString = "Hexy process do not exist! Plz open Hexy before query.";
+                break;
+            }
+            Json obj = Json::parse(req.body, errString);
+            if (!obj.is_object())
+            {
+                errCode = 400;
+                break;
+            }
+            if (!obj["row"].is_number() || !obj["col"].is_number())
+            {
+                errCode = 400;
+                errString = R"(Param row/col is required.)";
+                break;
+            }
+            int row = obj["row"].int_value();
+            int col = obj["col"].int_value();
+            if (!handle.setPiece(make_tuple(col, row)))
+            {
+                errCode = 400;
+                stringstream ss;
+                ss << "Position:(col " << col << ", row " << row << ") not empty!";
+                errString = ss.str();
+                break;
+            }
+        } while (0);
+        Json obj = Json::object({
+            { "errCode", errCode },
+            { "errString", errString },
+        });
+        res.set_content(obj.dump(), "application/json");
+    };
+    srv.post("/set", setReqHandler);
+    // srv.get("/set", setReqHandler);
+
     srv.listen("localhost", 8080);
 }
