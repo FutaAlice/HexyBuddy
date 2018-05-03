@@ -121,6 +121,9 @@
     <ProjectReference Include="..\hexybuddy\hexybuddy.vcxproj">
       <Project>{d2c7e9fd-0e7a-4e5d-80b6-a4414aa6da7e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\json11\json11.vcxproj">
+      <Project>{ee612a33-34d4-4657-b5c1-5048fd67eb76}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
