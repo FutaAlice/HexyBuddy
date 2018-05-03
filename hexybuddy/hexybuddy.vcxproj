@@ -18,6 +18,13 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="define.h" />
+    <ClInclude Include="hexybuddy.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="hexybuddy.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D2C7E9FD-0E7A-4E5D-80B6-A4414AA6DA7E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -130,9 +137,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
