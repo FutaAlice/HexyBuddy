@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{CEC2C085-AFF1-42E7-94E4-F0E9D98C044D}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hexybuddy", "hexybuddy\hexybuddy.vcxproj", "{D2C7E9FD-0E7A-4E5D-80B6-A4414AA6DA7E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "httpsrv", "httpsrv\httpsrv.vcxproj", "{37B1A841-D7F7-458F-87E4-690E61E84B8B}"
@@ -17,14 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CEC2C085-AFF1-42E7-94E4-F0E9D98C044D}.Debug|x64.ActiveCfg = Debug|x64
-		{CEC2C085-AFF1-42E7-94E4-F0E9D98C044D}.Debug|x64.Build.0 = Debug|x64
-		{CEC2C085-AFF1-42E7-94E4-F0E9D98C044D}.Debug|x86.ActiveCfg = Debug|Win32
-		{CEC2C085-AFF1-42E7-94E4-F0E9D98C044D}.Debug|x86.Build.0 = Debug|Win32
-		{CEC2C085-AFF1-42E7-94E4-F0E9D98C044D}.Release|x64.ActiveCfg = Release|x64
-		{CEC2C085-AFF1-42E7-94E4-F0E9D98C044D}.Release|x64.Build.0 = Release|x64
-		{CEC2C085-AFF1-42E7-94E4-F0E9D98C044D}.Release|x86.ActiveCfg = Release|Win32
-		{CEC2C085-AFF1-42E7-94E4-F0E9D98C044D}.Release|x86.Build.0 = Release|Win32
 		{D2C7E9FD-0E7A-4E5D-80B6-A4414AA6DA7E}.Debug|x64.ActiveCfg = Debug|x64
 		{D2C7E9FD-0E7A-4E5D-80B6-A4414AA6DA7E}.Debug|x64.Build.0 = Debug|x64
 		{D2C7E9FD-0E7A-4E5D-80B6-A4414AA6DA7E}.Debug|x86.ActiveCfg = Debug|Win32
