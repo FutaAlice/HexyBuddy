@@ -13,19 +13,19 @@ HexyHandle::~HexyHandle()
     delete pimpl_;
 }
 
-bool HexyHandle::isAlive()
+bool HexyHandle::init()
 {
-    return pimpl_->isAlive();
+    return pimpl_->init();
 }
 
-void HexyHandle::findHexy()
+std::vector<std::tuple<int, int>> HexyHandle::getRec()
 {
-    return pimpl_->findHexy();
+    return pimpl_->getRec();
 }
 
-void HexyHandle::updateData()
+bool HexyHandle::setPiece(const std::tuple<int, int> &pos)
 {
-    return pimpl_->updateData();
+    return pimpl_->setPiece(pos);
 }
 
 }
