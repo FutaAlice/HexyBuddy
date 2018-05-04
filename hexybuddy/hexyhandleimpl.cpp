@@ -148,3 +148,8 @@ bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos) {
     SendMessage(targetWnd_, WM_LBUTTONUP, 0, mousePos);
     return true;
 }
+
+void HexyHandleImpl::postOriginMsg(unsigned msg) {
+    updateData();
+    SendMessage(targetWnd_, WM_COMMAND, msg, 0);
+}

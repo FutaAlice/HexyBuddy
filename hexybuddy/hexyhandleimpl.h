@@ -3,6 +3,7 @@
 #include <tuple>
 #include <Windows.h>
 #include <TlHelp32.h>
+#include "msgdef.h"
 
 #define TARGET_IAMGE_NAME       L"Hexy.exe"
 #define TARGET_WINDOW_CAPTION   L"Hexy"
@@ -36,8 +37,8 @@ public:
 
     Points getRec();
     int getBoardsize();
-
     bool setPiece(const std::tuple<int, int> &);
+    void postOriginMsg(unsigned);
 private:
     /**
      * @brief 判断 Hexy 是否仍在运行

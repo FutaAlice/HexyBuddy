@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="hexybuddy.h" />
     <ClInclude Include="hexyhandleimpl.h" />
+    <ClInclude Include="msgdef.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hexybuddy.cpp" />

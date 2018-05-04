@@ -34,6 +34,7 @@ public:
      */
     bool setPiece(const std::tuple<int, int> &);
 
+    void postOriginMsg(unsigned);
 private:
     HexyHandleImpl *pimpl_ { nullptr };
 };

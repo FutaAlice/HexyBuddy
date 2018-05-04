@@ -147,12 +147,50 @@ void HexySet(const Request &req, Response &res)
     res.set_content(obj.dump(), "application/json");
 }
 
+void HexyOrigin(const httplib::Request & req, httplib::Response & res)
+{
+    ErrorStatus err;
+    do {
+        unsigned int msg;
+        if ("POST" == req.method) {
+            Json obj = Json::parse(req.body, err.str);
+            if (!obj.is_object()) {
+                err.code = 400;
+                break;
+            }
+            if (!obj["msg"].is_number()) {
+                err = { 400, R"(Param row/col is required.)" };
+                break;
+            }
+            msg = obj["msg"].int_value();
+        }
+        // GET
+        else {
+            if (req.params.end() == req.params.find("msg"))
+            {
+                err = { 400, R"(Param row/col is required.)" };
+                break;
+            }
+            msg = atoi(req.params.find("msg")->second.c_str());
+        }
+
+        try {
+            handle.postOriginMsg(msg);
+        }
+        catch (const char *errString) {
+            err = { 400, errString };
+        }
+    } while (0);
+    Json obj = Json(err);
+    res.set_content(obj.dump(), "application/json");
+}
+
 /**
  * @brief 消息路由无法匹配等情况的错误处理
  */
 void Error(const Request& req, Response& res)
 {
-    Json obj = Json({ res.status, "" });
+    Json obj = Json(ErrorStatus(res.status, ""));
     res.set_content(obj.dump(), "application/json");
 }
 

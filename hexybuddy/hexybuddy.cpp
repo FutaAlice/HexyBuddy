@@ -22,4 +22,8 @@ bool HexyHandle::setPiece(const std::tuple<int, int>& pos) {
     return pimpl_->setPiece(pos);
 }
 
+void HexyHandle::postOriginMsg(unsigned msg) {
+    pimpl_->postOriginMsg(msg);
+}
+
 }

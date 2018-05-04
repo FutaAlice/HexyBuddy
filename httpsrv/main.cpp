@@ -25,7 +25,9 @@ int main()
     srv.Get ("/init",     handle::HexyInit);
     srv.Get ("/rec",      handle::HexyRec);
     srv.Get ("/set",      handle::HexySet);
+    srv.Get ("/origin",   handle::HexyOrigin);
     srv.Post("/set",      handle::HexySet);
+    srv.Post("/origin",   handle::HexyOrigin);
 
     srv.set_error_handler(handle::Error);
 

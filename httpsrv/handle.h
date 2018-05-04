@@ -7,6 +7,7 @@ namespace handle {
 void HexyInit(const httplib::Request &req, httplib::Response &res);
 void HexyRec (const httplib::Request &req, httplib::Response &res);
 void HexySet (const httplib::Request &req, httplib::Response &res);
+void HexyOrigin(const httplib::Request &req, httplib::Response &res);
 
 void Error   (const httplib::Request &req, httplib::Response &res);
 
