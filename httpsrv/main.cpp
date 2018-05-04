@@ -77,7 +77,7 @@ struct Point
 
 int main()
 {
-    Server srv(HttpVersion::v1_1);
+    Server srv;
 
     if (!srv.is_valid())
     {
@@ -87,7 +87,7 @@ int main()
 
     HexyHandle handle;
 
-    srv.get("/init", [&](const Request &req, Response &res) {
+    srv.Get("/init", [&](const Request &req, Response &res) {
         bool success = handle.init();
         int errCode = success ? 200 : 400;
         string errString = success ? "" : "Fail, Hexy process not found.";
@@ -98,7 +98,7 @@ int main()
         res.set_content(obj.dump(), "application/json");
     });
 
-    srv.get("/rec", [&](const Request &req, Response &res) {
+    srv.Get("/rec", [&](const Request &req, Response &res) {
         int errCode = 200;
         string errString = "";
         vector<Point> points;
@@ -175,8 +175,8 @@ int main()
         });
         res.set_content(obj.dump(), "application/json");
     };
-    srv.post("/set", setReqHandler);
-    srv.get("/set", setReqHandler);
+    srv.Post("/set", setReqHandler);
+    srv.Get("/set", setReqHandler);
 
     srv.set_error_handler([](const auto& /*req*/, auto& res) {
         const char* fmt = "<p>Error Status: <span style='color:red;'>%d</span></p>";
