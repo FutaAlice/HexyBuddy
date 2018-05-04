@@ -126,7 +126,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="handle.cpp" />
+    <ClCompile Include="httputils.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="handle.h" />
+    <ClInclude Include="httputils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
