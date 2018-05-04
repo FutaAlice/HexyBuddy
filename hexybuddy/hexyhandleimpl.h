@@ -35,7 +35,8 @@ public:
     void updateData();
 
     Points getRec();
-    int getSize();
+    int getBoardsize();
+
     bool setPiece(const std::tuple<int, int> &);
 private:
     /**

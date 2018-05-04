@@ -78,14 +78,13 @@ void HexyRec(const Request &req, Response &res)
 {
     ErrorStatus err;
     vector<Point> points;
-    do {
-        if (!handle.init()) {
-            err = { 400, "Hexy process do not exist! Plz open Hexy before query." };
-            break;
-        }
+    try {
         auto rec = handle.getRec();
         points = { rec.begin(), rec.end() };
-    } while (0);
+    }
+    catch (const char *errString) {
+        err = { 400, errString };
+    }
 
     Json obj = Json(err);
     auto items = obj.object_items();
@@ -98,16 +97,12 @@ void HexyRec(const Request &req, Response &res)
 /**
  * @brief 控制 Hexy 落子
  * 接受 GET/POST 请求
- * 若成功向 Hexy 程序窗体句柄 SendMessage 则视为成功（无法指定位置在判断落子前是否已存在棋子）
+ * 落子成功返回 200 OK ，否则返回具体错误原因
  */
 void HexySet(const Request &req, Response &res)
 {
     ErrorStatus err;
     do {
-        if (!handle.init()) {
-            err = { 400, "Hexy process do not exist! Plz open Hexy before query." };
-            break;
-        }
         int row, col;
         if ("POST" == req.method) {
             Json obj = Json::parse(req.body, err.str);
@@ -133,12 +128,19 @@ void HexySet(const Request &req, Response &res)
             row = atoi(req.params.find("row")->second.c_str());
             col = atoi(req.params.find("col")->second.c_str());
         }
-        if (!handle.setPiece(make_tuple(col, row))) {
-            stringstream ss;
-            ss << "Position:(col " << col << ", row " << row << ") illegal not empty!";
-            err = { 400, ss.str() };
-            break;
+
+        try {
+            bool success = handle.setPiece(make_tuple(col, row));
+            if (!success) {
+                stringstream ss;
+                ss << "Position:(col " << col << ", row " << row << ") illegal not empty!";
+                err = { 400, ss.str() };
+            }
         }
+        catch (const char *errString) {
+            err = { 400, errString };
+        }
+
     } while (0);
 
     Json obj = Json(err);

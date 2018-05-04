@@ -85,20 +85,20 @@ static bool readRemoteMemory(HANDLE hProc, void *dest, size_t cap, size_t addres
                            dest,
                            cap,
                            reinterpret_cast<SIZE_T *>(&cnt)) || cnt != cap) {
-        throw;
+        throw "Fatal error at readRemoteMemory() !";
     }
     return true;
 }
 
 void HexyHandleImpl::updateData() {
     if (!isAlive())
-        throw;
+        throw "Hexy process not exist, or HexyBuddy not initialized!";
 
     const DWORD dwDA = PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_QUERY_LIMITED_INFORMATION;
     HANDLE hProc = OpenProcess(dwDA, FALSE, targetPID_);
     ScopedGuard guard([&] {CloseHandle(hProc); });
     if (!hProc)
-        throw;
+        throw "Error occurred at OpenProcess()! Plz init HexyBuddy and try again.";
 
     readRemoteMemory(hProc, ARG(pawnNum_));
     readRemoteMemory(hProc, ARG(gameOver_));
@@ -121,8 +121,9 @@ HexyHandleImpl::Points HexyHandleImpl::getRec() {
     return rec;
 }
 
-int HexyHandleImpl::getSize() {
-    return 0;
+int HexyHandleImpl::getBoardsize() {
+    updateData();
+    return pawnNum_;
 }
 
 bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos) {
