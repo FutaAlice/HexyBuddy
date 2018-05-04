@@ -3,53 +3,55 @@
 #include "hexyhandleimpl.h"
 using namespace std;
 
-bool HexyHandleImpl::init()
-{
+bool HexyHandleImpl::init() {
     findHexy();
     return isAlive();
 }
 
-bool HexyHandleImpl::isAlive()
-{
+bool HexyHandleImpl::isAlive() {
     return targetWnd_ && targetPID_ && IsWindow(targetWnd_);
 }
 
-class ScopedGuard
-{
+class ScopedGuard {
 public:
     ScopedGuard(std::function<void()> cleanRoutine) :
         func_(cleanRoutine) {}
-    ~ScopedGuard()
-    {
+    ~ScopedGuard() {
         func_();
     }
 private:
     function<void()> func_;
 };
 
-static BOOL __stdcall findTargetWindow(HWND hwnd, LPARAM param)
-{
+/**
+ * @brief 用于 EnumWindows 的回调函数
+ * 
+ * @param hwnd 依次遍历所有顶层窗口的句柄
+ * @param param 用于接收结果的 HWND *
+ * @return BOOL 函数返回FALSE，则停止枚举；否则继续。
+ */
+static BOOL __stdcall findTargetWindow(HWND hwnd, LPARAM param) {
     TCHAR wndCaption[MAX_PATH] = TEXT("");
     GetWindowText(hwnd, wndCaption, MAX_PATH);
-    if (!wcscmp(wndCaption, TARGET_WINDOW_CAPTION))
-    {
-        auto pWnd = reinterpret_cast<HWND *>(param);
-        *pWnd = hwnd;
+    // 若窗体标题为 "Hexy"，则记录并停止枚举
+    if (!wcscmp(wndCaption, TARGET_WINDOW_CAPTION)) {
+        *reinterpret_cast<HWND *>(param) = hwnd;
         return FALSE;
     }
     return TRUE;
 }
 
-void HexyHandleImpl::findHexy()
-{
+void HexyHandleImpl::findHexy() {
     if (isAlive())
         return;
 
+    // 获取系统中所有进程的快照
     HANDLE hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     ScopedGuard guard([&] { CloseHandle(hProcess); });
     if (hProcess == INVALID_HANDLE_VALUE)
         return;
 
+    // 如果存在名为 "Hexy.exe" 的进程，则赋值给 targetPID_
     PROCESSENTRY32 entry;
     entry.dwSize = sizeof(PROCESSENTRY32);
     if (!Process32First(hProcess, &entry))
@@ -57,27 +59,38 @@ void HexyHandleImpl::findHexy()
     while (Process32Next(hProcess, &entry))
         if (!wcscmp(TARGET_IAMGE_NAME, entry.szExeFile))
             targetPID_ = entry.th32ProcessID;
+
+    // 如果存在标题名为 "Hexy" 的顶层窗口，则将窗体句柄赋值给 targetWnd_
     EnumWindows(findTargetWindow, reinterpret_cast<LPARAM>(&targetWnd_));
 }
 
+/**
+ * @brief 用于辅助读取内存的宏
+ */
 #define ARG(var) reinterpret_cast<void *>(&var), sizeof(var), var##offset
 
-static bool readRemoteMemory(HANDLE hProc, void *dest, size_t cap, size_t address)
-{
+/**
+ * @brief 读取内存偏移中的数据
+ * 
+ * @param hProc Hexy 进程对象的句柄
+ * @param dest 读取成功后存放位置
+ * @param cap 读取的字节数
+ * @param address 读取目标的内存地址
+ * @return bool 成功返回 true ，否则抛出异常
+ */
+static bool readRemoteMemory(HANDLE hProc, void *dest, size_t cap, size_t address) {
     size_t cnt = 0;
     if (!ReadProcessMemory(hProc,
                            reinterpret_cast<LPCVOID>(address),
                            dest,
                            cap,
-                           reinterpret_cast<SIZE_T *>(&cnt)) || cnt != cap)
-    {
+                           reinterpret_cast<SIZE_T *>(&cnt)) || cnt != cap) {
         throw;
     }
     return true;
 }
 
-void HexyHandleImpl::updateData()
-{
+void HexyHandleImpl::updateData() {
     if (!isAlive())
         throw;
 
@@ -97,12 +110,10 @@ void HexyHandleImpl::updateData()
     readRemoteMemory(hProc, ARG(hexygonCenterPairList_));
 }
 
-HexyHandleImpl::Points HexyHandleImpl::getRec()
-{
+HexyHandleImpl::Points HexyHandleImpl::getRec() {
     updateData();
     Points rec;
-    for (int i = 0; i < pawnNum_; ++i)
-    {
+    for (int i = 0; i < pawnNum_; ++i) {
         int col = globalPosList_[i] % (boardSize_ + 2) - 1;
         int row = globalPosList_[i] / (boardSize_ + 2) - 1;
         rec.push_back(make_tuple(col, row));
@@ -110,13 +121,11 @@ HexyHandleImpl::Points HexyHandleImpl::getRec()
     return rec;
 }
 
-int HexyHandleImpl::getSize()
-{
+int HexyHandleImpl::getSize() {
     return 0;
 }
 
-bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos)
-{
+bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos) {
     auto rec = getRec();
     int targetCol = get<0>(pos);
     int targetRow = get<1>(pos);
@@ -124,8 +133,7 @@ bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos)
         0 > targetRow || boardSize_ <= targetRow)
         return false;
 
-    for (auto x : rec)
-    {
+    for (auto x : rec) {
         if (targetCol == get<0>(x) && targetRow == get<1>(x))
             return false;
     }

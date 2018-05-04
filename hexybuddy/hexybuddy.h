@@ -4,8 +4,7 @@
 class HexyHandleImpl;
 namespace hexybuddy {
 
-class HexyHandle
-{
+class HexyHandle {
     using Points = std::vector<std::tuple<int, int>>;
 public:
     HexyHandle();

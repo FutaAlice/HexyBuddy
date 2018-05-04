@@ -34,8 +34,8 @@ struct Point {
 };
 
 struct ErrorStatus {
-    ErrorStatus(int errCode = 200, string errString = "OK") :
-        code(errCode), str(errString) {
+    ErrorStatus(int errCode = 200, string errString = "OK")
+        : code(errCode), str(errString) {
     }
     Json to_json() const {
         return Json::object{
