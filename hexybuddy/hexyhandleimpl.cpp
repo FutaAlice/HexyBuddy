@@ -97,10 +97,10 @@ void HexyHandleImpl::updateData()
     readRemoteMemory(hProc, ARG(hexygonCenterPairList_));
 }
 
-std::vector<std::tuple<int, int>> HexyHandleImpl::getRec()
+HexyHandleImpl::Points HexyHandleImpl::getRec()
 {
     updateData();
-    std::vector<std::tuple<int, int>> rec;
+    Points rec;
     for (int i = 0; i < pawnNum_; ++i)
     {
         int col = globalPosList_[i] % (boardSize_ + 2) - 1;
@@ -108,6 +108,11 @@ std::vector<std::tuple<int, int>> HexyHandleImpl::getRec()
         rec.push_back(make_tuple(col, row));
     }
     return rec;
+}
+
+int HexyHandleImpl::getSize()
+{
+    return 0;
 }
 
 bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos)

@@ -18,7 +18,7 @@ bool HexyHandle::init()
     return pimpl_->init();
 }
 
-std::vector<std::tuple<int, int>> HexyHandle::getRec()
+HexyHandle::Points HexyHandle::getRec()
 {
     return pimpl_->getRec();
 }

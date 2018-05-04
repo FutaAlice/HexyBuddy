@@ -21,10 +21,12 @@ enum
 
 class HexyHandleImpl
 {
+    using Points = std::vector<std::tuple<int, int>>;
 public:
     bool init();
     void updateData();
-    std::vector<std::tuple<int, int>> getRec();
+    Points getRec();
+    int getSize();
     bool setPiece(const std::tuple<int, int> &);
 private:
     bool isAlive();
