@@ -4,10 +4,15 @@
 namespace httpsrv {
 namespace handle {
 
-void HexyInit(const httplib::Request &req, httplib::Response &res);
-void HexyRec (const httplib::Request &req, httplib::Response &res);
-void HexySet (const httplib::Request &req, httplib::Response &res);
-void HexyOrigin(const httplib::Request &req, httplib::Response &res);
+void HexyInit           (const httplib::Request &req, httplib::Response &res);
+
+void HexyGetRec         (const httplib::Request &req, httplib::Response &res);
+void HexyGetGameoverFlag(const httplib::Request &req, httplib::Response &res);
+void HexyGetPawnNum     (const httplib::Request &req, httplib::Response &res);
+void HexyGetBoardSize   (const httplib::Request &req, httplib::Response &res);
+
+void HexySetPiece       (const httplib::Request &req, httplib::Response &res);
+void HexyOriginMsg      (const httplib::Request &req, httplib::Response &res);
 
 void Error   (const httplib::Request &req, httplib::Response &res);
 

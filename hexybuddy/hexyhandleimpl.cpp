@@ -123,7 +123,19 @@ HexyHandleImpl::Points HexyHandleImpl::getRec() {
 
 int HexyHandleImpl::getBoardsize() {
     updateData();
+    return boardSize_;
+}
+
+int HexyHandleImpl::getPawnNum()
+{
+    updateData();
     return pawnNum_;
+}
+
+bool HexyHandleImpl::getGameOverFlag()
+{
+    updateData();
+    return gameOver_ == 1;
 }
 
 bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos) {

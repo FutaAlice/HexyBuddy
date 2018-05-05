@@ -19,6 +19,12 @@ namespace handle {
 
 namespace {
 
+#define JsonAddItem(obj, k, v) do {  \
+    auto items = obj.object_items(); \
+    items[k] = Json(v);              \
+    obj = Json(items);               \
+} while (0)
+
 // HexyBuddy 实例
 hexybuddy::HexyHandle handle;
 
@@ -74,7 +80,7 @@ void HexyInit(const Request &req, Response &res) {
  *      ]
  *  }
  */
-void HexyRec(const Request &req, Response &res)
+void HexyGetRec(const Request &req, Response &res)
 {
     ErrorStatus err;
     vector<Point> points;
@@ -87,9 +93,85 @@ void HexyRec(const Request &req, Response &res)
     }
 
     Json obj = Json(err);
-    auto items = obj.object_items();
-    items["records"] = Json(points);
-    obj = Json(items);
+    JsonAddItem(obj, "records", points);
+
+    res.set_content(obj.dump(), "application/json");
+}
+
+/**
+* @brief 获取 Hexy 棋局是否结束
+*  回复 JSON 格式如下：
+*  {
+*      "errCode": 200,
+*      "errString": "OK",
+*      "gameover": true/false
+*  }
+*/
+void HexyGetGameoverFlag(const httplib::Request & req, httplib::Response & res)
+{
+    ErrorStatus err;
+    bool gameover = false;
+    try {
+        gameover = handle.getGameOverFlag();
+    }
+    catch (const char *errString) {
+        err = { 400, errString };
+    }
+
+    Json obj = Json(err);
+    JsonAddItem(obj, "gameover", gameover);
+
+    res.set_content(obj.dump(), "application/json");
+}
+
+/**
+ * @brief 获取 Hexy 棋盘上的棋子数
+ *  回复 JSON 格式如下：
+ *  {
+ *      "errCode": 200,
+ *      "errString": "OK",
+ *      "num": 21
+ *  }
+*/
+void HexyGetPawnNum(const httplib::Request & req, httplib::Response & res)
+{
+    ErrorStatus err;
+    int num = 0;
+    try {
+        num = handle.getPawnNum();
+    }
+    catch (const char *errString) {
+        err = { 400, errString };
+    }
+
+    Json obj = Json(err);
+    JsonAddItem(obj, "num", num);
+
+    res.set_content(obj.dump(), "application/json");
+}
+
+/**
+ * @brief 获取 Hexy 棋盘尺寸
+ *  回复 JSON 格式如下：
+ *  {
+ *      "errCode": 200,
+ *      "errString": "OK",
+ *      "boardsize": 6
+ *  }
+*/
+void HexyGetBoardSize(const httplib::Request & req, httplib::Response & res)
+{
+    ErrorStatus err;
+    int boardsize = 0;
+    try {
+        boardsize = handle.getBoardsize();
+    }
+    catch (const char *errString) {
+        err = { 400, errString };
+    }
+
+    Json obj = Json(err);
+    JsonAddItem(obj, "boardsize", boardsize);
 
     res.set_content(obj.dump(), "application/json");
 }
@@ -99,7 +181,7 @@ void HexyRec(const Request &req, Response &res)
  * 接受 GET/POST 请求
  * 落子成功返回 200 OK ，否则返回具体错误原因
  */
-void HexySet(const Request &req, Response &res)
+void HexySetPiece(const Request &req, Response &res)
 {
     ErrorStatus err;
     do {
@@ -147,7 +229,7 @@ void HexySet(const Request &req, Response &res)
     res.set_content(obj.dump(), "application/json");
 }
 
-void HexyOrigin(const httplib::Request & req, httplib::Response & res)
+void HexyOriginMsg(const httplib::Request & req, httplib::Response & res)
 {
     ErrorStatus err;
     do {
@@ -181,6 +263,7 @@ void HexyOrigin(const httplib::Request & req, httplib::Response & res)
             err = { 400, errString };
         }
     } while (0);
+
     Json obj = Json(err);
     res.set_content(obj.dump(), "application/json");
 }

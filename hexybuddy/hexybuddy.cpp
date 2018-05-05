@@ -18,6 +18,21 @@ HexyHandle::Points HexyHandle::getRec() {
     return pimpl_->getRec();
 }
 
+int HexyHandle::getBoardsize()
+{
+    return pimpl_->getBoardsize();
+}
+
+int HexyHandle::getPawnNum()
+{
+    return pimpl_->getPawnNum();
+}
+
+bool HexyHandle::getGameOverFlag()
+{
+    return pimpl_->getGameOverFlag();
+}
+
 bool HexyHandle::setPiece(const std::tuple<int, int>& pos) {
     return pimpl_->setPiece(pos);
 }

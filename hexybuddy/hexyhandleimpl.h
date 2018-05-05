@@ -9,13 +9,13 @@
 #define TARGET_WINDOW_CAPTION   L"Hexy"
 
 enum {
-    pawnNum_offset              = 0x01B0C5D0,
-    boardSize_offset            = 0x0042303C,
-    boardRatio_offset           = 0x01B0BFC8,
-    gameOver_offset             = 0x01B0CCE0,
-    canvasCenterX_offset        = 0x01b0c328,
-    canvasCenterY_offset        = 0x01b0c32c,
-    globalPosList_offset        = 0x01B073A0,
+    pawnNum_offset               = 0x01B0C5D0,
+    boardSize_offset             = 0x0042303C,
+    boardRatio_offset            = 0x01B0BFC8,
+    gameOver_offset              = 0x01B0CCE0,
+    canvasCenterX_offset         = 0x01b0c328,
+    canvasCenterY_offset         = 0x01b0c32c,
+    globalPosList_offset         = 0x01B073A0,
     hexygonCenterPairList_offset = 0x01B075C0,
 };
 
@@ -30,13 +30,16 @@ public:
     bool init();
 
     /**
-     * @brief 同步 Hexy 的状态
+     * @brief 同步 Hexy 的状态（HexyBuddy 未成功初始化或 Hexy 进程不存在将抛出异常）
      * 
      */
     void updateData();
 
-    Points getRec();
-    int getBoardsize();
+    Points getRec();          // 获取落子记录
+    int    getBoardsize();    // 获取棋盘尺寸
+    int    getPawnNum();      // 获取落子数
+    bool   getGameOverFlag(); // 判断棋局是否结束
+
     bool setPiece(const std::tuple<int, int> &);
     void postOriginMsg(unsigned);
 private:
@@ -53,15 +56,15 @@ private:
      */
     void findHexy();
 private:
-    HWND targetWnd_ = 0;    // "Hexy" 的窗体句柄
-    DWORD targetPID_ = 0;   // "Hexy" 的进程 ID
+    HWND  targetWnd_ = 0;    // "Hexy" 的窗体句柄
+    DWORD targetPID_ = 0;    // "Hexy" 的进程 ID
 
-    int boardSize_;         // 棋盘尺寸
-    int globalPosList_[128];
-    int pawnNum_;           // 棋子数
-    int gameOver_;
-    int canvasCenterX_;
-    int canvasCenterY_;
-    double boardRatio_;
-    double hexygonCenterPairList_[13 * 13 * 2];
+    int boardSize_;          // 棋盘尺寸
+    int globalPosList_[128]; // 落子记录，公式为 val = (row+1)*(size+2)+(col+1)，下标从 0 计数
+    int pawnNum_;            // 棋子数
+    int gameOver_;           // 棋局是否已经结束
+    int canvasCenterX_;      // 棋盘中心 X 坐标
+    int canvasCenterY_;      // 棋盘中心 Y 坐标
+    double boardRatio_;      // 缩放比例
+    double hexygonCenterPairList_[13 * 13 * 2]; // 六边形网格中心坐标（偶数位 X 坐标，奇数位 Y 坐标）
 };

@@ -26,6 +26,27 @@ public:
     Points getRec();
 
     /**
+    * @brief 读取棋盘尺寸
+    *
+    * @return int 棋盘尺寸
+    */
+    int getBoardsize();
+
+    /**
+    * @brief 读取棋盘上现有棋子数
+    *
+    * @return int 棋子数
+    */
+    int getPawnNum();
+
+    /**
+    * @brief 读取棋局是否结束
+    *
+    * @return bool 棋盘结束返回 true 否则返回 false
+    */
+    bool getGameOverFlag();
+
+    /**
      * @brief 在 Hexy 当前棋盘上落子（未找到 Hexy 实例将抛出异常）
      * 
      * @param 由 col 和 row 坐标组成的 tuple，下标从 0 计算

@@ -22,12 +22,15 @@ int main()
         exit(1);
     }
 
-    srv.Get ("/init",     handle::HexyInit);
-    srv.Get ("/rec",      handle::HexyRec);
-    srv.Get ("/set",      handle::HexySet);
-    srv.Get ("/origin",   handle::HexyOrigin);
-    srv.Post("/set",      handle::HexySet);
-    srv.Post("/origin",   handle::HexyOrigin);
+    srv.Get ("/init",      handle::HexyInit);
+    srv.Get ("/rec",       handle::HexyGetRec);
+    srv.Get ("/gameover",  handle::HexyGetGameoverFlag);
+    srv.Get ("/pawnnum",   handle::HexyGetPawnNum);
+    srv.Get ("/boardsize", handle::HexyGetBoardSize);
+    srv.Get ("/set",       handle::HexySetPiece);
+    srv.Get ("/origin",    handle::HexyOriginMsg);
+    srv.Post("/set",       handle::HexySetPiece);
+    srv.Post("/origin",    handle::HexyOriginMsg);
 
     srv.set_error_handler(handle::Error);
 
