@@ -139,9 +139,12 @@ bool HexyHandleImpl::getGameOverFlag()
 }
 
 bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos) {
+    if (getGameOverFlag())
+        throw "Game is over. Plz try again after start a new game :)";
+
     auto rec = getRec();
-    int targetCol = get<0>(pos);
-    int targetRow = get<1>(pos);
+
+    int targetCol = get<0>(pos), targetRow = get<1>(pos);
     if (0 > targetCol || boardSize_ <= targetCol ||
         0 > targetRow || boardSize_ <= targetRow)
         return false;
