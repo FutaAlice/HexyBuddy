@@ -3,7 +3,6 @@
 #include <tuple>
 #include <Windows.h>
 #include <TlHelp32.h>
-#include "msgdef.h"
 
 #define TARGET_IAMGE_NAME       L"Hexy.exe"
 #define TARGET_WINDOW_CAPTION   L"Hexy"
@@ -19,6 +18,10 @@ enum {
     hexygonCenterPairList_offset = 0x01B075C0,
 };
 
+namespace hexybuddy {
+enum class Command : unsigned;
+}
+
 class HexyHandleImpl {
     using Points = std::vector<std::tuple<int, int>>;
 public:
@@ -31,17 +34,16 @@ public:
 
     /**
      * @brief 同步 Hexy 的状态（HexyBuddy 未成功初始化或 Hexy 进程不存在将抛出异常）
-     * 
      */
     void updateData();
 
-    Points getRec();          // 获取落子记录
-    int    getBoardsize();    // 获取棋盘尺寸
-    int    getPawnNum();      // 获取落子数
-    bool   getGameOverFlag(); // 判断棋局是否结束
+    Points getRec();        // 获取落子记录
+    int getBoardsize();     // 获取棋盘尺寸
+    int getPawnNum();       // 获取落子数
+    bool getGameOverFlag(); // 判断棋局是否结束
 
-    bool setPiece(const std::tuple<int, int> &);
-    void postOriginMsg(unsigned);
+    bool setPiece(const std::tuple<int, int> &); // 落子，输入参数 tuple<col, row>, 返回 true 表示成功
+    void msgOrigin(hexybuddy::Command cmd);      // 向 Hexy 窗体句柄发送控制命令
 private:
     /**
      * @brief 判断 Hexy 是否仍在运行
@@ -52,7 +54,6 @@ private:
 
     /**
      * @brief 寻找正在运行的 Hexy 程序，给 "targetWnd_" 和 "targetPID_" 赋值
-     * 
      */
     void findHexy();
 private:

@@ -50,8 +50,7 @@ string toLogStr(const Request& req, const Response& res) {
     return s;
 }
 
-void Logger(const httplib::Request& req, const httplib::Response& res)
-{
+void Logger(const httplib::Request& req, const httplib::Response& res) {
     cout << toLogStr(req, res);
 }
 

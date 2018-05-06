@@ -19,10 +19,37 @@ namespace handle {
 
 namespace {
 
+/**
+* @brief 向 Json 对象中添加新的 field
+*/
 #define JsonAddItem(obj, k, v) do {  \
     auto items = obj.object_items(); \
     items[k] = Json(v);              \
     obj = Json(items);               \
+} while (0)
+
+/**
+* @brief 向 Json 对象写入 Response 返回
+*/
+#define JsonSetResp(obj, rep) do {                   \
+    if ("POST" == req.method)                        \
+        res.set_header("Cache-Control", "no-cache"); \
+    res.set_content(obj.dump(), "application/json"); \
+} while (0)
+
+/**
+* @brief try 执行指定语句。成功，返回 200 OK；失败，返回异常内容。
+*/
+#define TryAndReturn(func) do {     \
+    ErrorStatus err;                \
+    try {                           \
+        func();                     \
+    }                               \
+    catch (const char *errString) { \
+        err = { 400, errString };   \
+    }                               \
+    Json obj = Json(err);           \
+    JsonSetResp(obj, res);          \
 } while (0)
 
 // HexyBuddy 实例
@@ -65,7 +92,7 @@ void HexyInit(const Request &req, Response &res) {
     }
 
     Json obj = Json(err);
-    res.set_content(obj.dump(), "application/json");
+    JsonSetResp(obj, res);
 }
 
 /**
@@ -80,8 +107,7 @@ void HexyInit(const Request &req, Response &res) {
  *      ]
  *  }
  */
-void HexyGetRec(const Request &req, Response &res)
-{
+void HexyGetRec(const Request &req, Response &res) {
     ErrorStatus err;
     vector<Point> points;
     try {
@@ -94,8 +120,7 @@ void HexyGetRec(const Request &req, Response &res)
 
     Json obj = Json(err);
     JsonAddItem(obj, "records", points);
-
-    res.set_content(obj.dump(), "application/json");
+    JsonSetResp(obj, res);
 }
 
 /**
@@ -107,8 +132,7 @@ void HexyGetRec(const Request &req, Response &res)
 *      "gameover": true/false
 *  }
 */
-void HexyGetGameoverFlag(const httplib::Request & req, httplib::Response & res)
-{
+void HexyGetGameoverFlag(const Request &req, Response &res) {
     ErrorStatus err;
     bool gameover = false;
     try {
@@ -120,8 +144,7 @@ void HexyGetGameoverFlag(const httplib::Request & req, httplib::Response & res)
 
     Json obj = Json(err);
     JsonAddItem(obj, "gameover", gameover);
-
-    res.set_content(obj.dump(), "application/json");
+    JsonSetResp(obj, res);
 }
 
 /**
@@ -133,8 +156,7 @@ void HexyGetGameoverFlag(const httplib::Request & req, httplib::Response & res)
  *      "num": 21
  *  }
 */
-void HexyGetPawnNum(const httplib::Request & req, httplib::Response & res)
-{
+void HexyGetPawnNum(const Request &req, Response &res) {
     ErrorStatus err;
     int num = 0;
     try {
@@ -146,8 +168,7 @@ void HexyGetPawnNum(const httplib::Request & req, httplib::Response & res)
 
     Json obj = Json(err);
     JsonAddItem(obj, "num", num);
-
-    res.set_content(obj.dump(), "application/json");
+    JsonSetResp(obj, res);
 }
 
 /**
@@ -159,8 +180,7 @@ void HexyGetPawnNum(const httplib::Request & req, httplib::Response & res)
  *      "boardsize": 6
  *  }
 */
-void HexyGetBoardSize(const httplib::Request & req, httplib::Response & res)
-{
+void HexyGetBoardSize(const Request &req, Response &res) {
     ErrorStatus err;
     int boardsize = 0;
     try {
@@ -172,8 +192,7 @@ void HexyGetBoardSize(const httplib::Request & req, httplib::Response & res)
 
     Json obj = Json(err);
     JsonAddItem(obj, "boardsize", boardsize);
-
-    res.set_content(obj.dump(), "application/json");
+    JsonSetResp(obj, res);
 }
 
 /**
@@ -181,8 +200,7 @@ void HexyGetBoardSize(const httplib::Request & req, httplib::Response & res)
  * 接受 GET/POST 请求
  * 落子成功返回 200 OK ，否则返回具体错误原因
  */
-void HexySetPiece(const Request &req, Response &res)
-{
+void HexySetPiece(const Request &req, Response &res) {
     ErrorStatus err;
     do {
         int row, col;
@@ -193,7 +211,7 @@ void HexySetPiece(const Request &req, Response &res)
                 break;
             }
             if (!obj["row"].is_number() || !obj["col"].is_number()) {
-                err = { 400, R"(Param row/col is required.)" };
+                err = { 400, R"(Param: row/col is required.)" };
                 break;
             }
             row = obj["row"].int_value();
@@ -202,9 +220,8 @@ void HexySetPiece(const Request &req, Response &res)
         // GET
         else {
             if (req.params.end() == req.params.find("row") ||
-                req.params.end() == req.params.find("col"))
-            {
-                err = { 400, R"(Param row/col is required.)" };
+                req.params.end() == req.params.find("col")) {
+                err = { 400, R"(Param: row/col is required.)" };
                 break;
             }
             row = atoi(req.params.find("row")->second.c_str());
@@ -226,11 +243,10 @@ void HexySetPiece(const Request &req, Response &res)
     } while (0);
 
     Json obj = Json(err);
-    res.set_content(obj.dump(), "application/json");
+    JsonSetResp(obj, res);
 }
 
-void HexyOriginMsg(const httplib::Request & req, httplib::Response & res)
-{
+void HexyMsgOrigin(const Request &req, Response &res) {
     ErrorStatus err;
     do {
         unsigned int msg;
@@ -241,23 +257,22 @@ void HexyOriginMsg(const httplib::Request & req, httplib::Response & res)
                 break;
             }
             if (!obj["msg"].is_number()) {
-                err = { 400, R"(Param row/col is required.)" };
+                err = { 400, R"(Param: "msg" is required.)" };
                 break;
             }
             msg = obj["msg"].int_value();
         }
         // GET
         else {
-            if (req.params.end() == req.params.find("msg"))
-            {
-                err = { 400, R"(Param row/col is required.)" };
+            if (req.params.end() == req.params.find("msg")) {
+                err = { 400, R"(Param: "msg" is required.)" };
                 break;
             }
             msg = atoi(req.params.find("msg")->second.c_str());
         }
 
         try {
-            handle.postOriginMsg(msg);
+            handle.msgOrigin(static_cast<hexybuddy::Command>(msg));
         }
         catch (const char *errString) {
             err = { 400, errString };
@@ -265,16 +280,132 @@ void HexyOriginMsg(const httplib::Request & req, httplib::Response & res)
     } while (0);
 
     Json obj = Json(err);
-    res.set_content(obj.dump(), "application/json");
+    JsonSetResp(obj, res);
+}
+
+void HexyMsgNewGame(const Request &req, Response &res) {
+    TryAndReturn(handle.msgNewGame);
+}
+
+void HexyMsgExit(const Request &req, Response &res) {
+    TryAndReturn(handle.msgExit);
+}
+
+void HexyMsgHexyOn(const Request &req, Response &res) {
+    TryAndReturn(handle.msgHexyOn);
+}
+
+void HexyMsgHexyOff(const Request &req, Response &res) {
+    TryAndReturn(handle.msgHexyOff);
+}
+
+void HexyMsgSwapOn(const Request &req, Response &res) {
+    TryAndReturn(handle.msgSwapOn);
+}
+
+void HexyMsgSwapOff(const Request &req, Response &res) {
+    TryAndReturn(handle.msgSwapOff);
+}
+
+void HexyMsgLevelBeginner(const Request &req, Response &res) {
+    TryAndReturn(handle.msgLevelBeginner);
+}
+
+void HexyMsgLevelIntermediate(const Request &req, Response &res) {
+    TryAndReturn(handle.msgLevelIntermediate);
+}
+
+void HexyMsgLevelAdvanced(const Request &req, Response &res) {
+    TryAndReturn(handle.msgLevelAdvanced);
+}
+
+void HexyMsgLevelExpert(const Request &req, Response &res) {
+    TryAndReturn(handle.msgLevelExpert);
+}
+
+void HexyMsgSize(const Request &req, Response &res) {
+    ErrorStatus err;
+    do {
+        int size;
+        if ("POST" == req.method) {
+            Json obj = Json::parse(req.body, err.str);
+            if (!obj.is_object()) {
+                err.code = 400;
+                break;
+            }
+            if (!obj["size"].is_number()) {
+                err = { 400, R"(Param: "size" is required.)" };
+                break;
+            }
+            size = obj["size"].int_value();
+        }
+        // GET
+        else {
+            if (req.params.end() == req.params.find("size")) {
+                err = { 400, R"(Param: "size" is required.)" };
+                break;
+            }
+            size = atoi(req.params.find("size")->second.c_str());
+        }
+
+        try {
+            handle.msgSize(size);
+        }
+        catch (const char *errString) {
+            err = { 400, errString };
+        }
+    } while (0);
+
+    Json obj = Json(err);
+    JsonSetResp(obj, res);
+}
+
+void HexyMsgShapeDefault(const Request &req, Response &res) {
+    TryAndReturn(handle.msgShapeDefault);
+}
+
+void HexyMsgToggleCoord(const Request &req, Response &res) {
+    TryAndReturn(handle.msgToggleCoord);
+}
+
+void HexyMsgToggleNumbering(const Request &req, Response &res) {
+    TryAndReturn(handle.msgToggleNumbering);
+}
+
+void HexyMsgToggleGuess(const Request &req, Response &res) {
+    TryAndReturn(handle.msgToggleGuess);
+}
+
+void HexyMsgToggleSound(const Request &req, Response &res) {
+    TryAndReturn(handle.msgToggleSound);
+}
+
+void HexyMsgToggleRandom(const Request &req, Response &res) {
+    TryAndReturn(handle.msgToggleRandom);
+}
+
+void HexyMsgToggleClock(const Request &req, Response &res) {
+    TryAndReturn(handle.msgToggleClock);
+}
+
+void HexyMsgMove(const Request &req, Response &res) {
+    TryAndReturn(handle.msgMove);
+}
+
+void HexyMsgHint(const Request &req, Response &res) {
+    TryAndReturn(handle.msgHint);
+}
+
+void HexyMsgDemo(const Request &req, Response &res) {
+    TryAndReturn(handle.msgDemo);
 }
 
 /**
  * @brief 消息路由无法匹配等情况的错误处理
  */
-void Error(const Request& req, Response& res)
-{
+void Error(const Request& req, Response& res) {
     Json obj = Json(ErrorStatus(res.status, ""));
-    res.set_content(obj.dump(), "application/json");
+    JsonSetResp(obj, res);
 }
 
 } // namespace httputils

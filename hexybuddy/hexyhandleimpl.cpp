@@ -164,7 +164,7 @@ bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos) {
     return true;
 }
 
-void HexyHandleImpl::postOriginMsg(unsigned msg) {
+void HexyHandleImpl::msgOrigin(hexybuddy::Command cmd) {
     updateData();
-    SendMessage(targetWnd_, WM_COMMAND, msg, 0);
+    SendMessage(targetWnd_, WM_COMMAND, static_cast<unsigned>(cmd), 0);
 }
