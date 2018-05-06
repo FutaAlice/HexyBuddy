@@ -159,12 +159,24 @@ bool HexyHandleImpl::setPiece(const std::tuple<int, int> &pos) {
     double y = canvasCenterY_ + boardRatio_ * hexygonCenterPairList_[2 * index + 1];
     LPARAM mousePos = short(x) | short(y) << 16;
 
+    POINT pt;
+    GetCursorPos(&pt);
+
     SendMessage(targetWnd_, WM_LBUTTONDOWN, 0, mousePos);
     SendMessage(targetWnd_, WM_LBUTTONUP, 0, mousePos);
+
+    SetCursorPos(pt.x, pt.y);
+
     return true;
 }
 
 void HexyHandleImpl::msgOrigin(hexybuddy::Command cmd) {
     updateData();
+
+    POINT pt;
+    GetCursorPos(&pt);
+
     SendMessage(targetWnd_, WM_COMMAND, static_cast<unsigned>(cmd), 0);
+
+    SetCursorPos(pt.x, pt.y);
 }
