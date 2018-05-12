@@ -121,22 +121,213 @@ httpsrv 默认监听本机的 **8080** 端口的 HTTP 请求，运行前需确�
 
 #### 0. 初始化 Hexy
 
+关联 HexyBuddy 和 后台运行的 Hexy（有多个 Hexy 实例存在则关联进程快照中靠前的实例）
+启动程序 或 更换 Hexy 实例后都需要手动请求。
+
+##### 1）请求（GET 方法）：http://localhost:8080/init
+
+##### 2）响应：
+
+```json
+{
+	"errCode": 200,
+	"errString": "OK"
+}
+```
+
 #### 1. 落子
+
+控制 Hexy 在指定坐标落子。
+
+##### 1）请求（GET 方法）：http://localhost:8080/set/piece?col=0&row=5
+
+- 参数说明：
+	- col：落子位置列坐标（0 <= col < boardsize）
+	- row：落子位置行坐标（0 <= row < boardsize）
+
+##### 2）请求（POST 方法）：http://localhost:8080/set/piece
+
+- 请求体：
+```json
+{
+	col: 0,
+	row: 5
+}
+```
+
+- 参数说明：
+	- col：落子位置列坐标（0 <= col < boardsize）
+	- row：落子位置行坐标（0 <= row < boardsize）
+
+##### 2）响应：
+
+```json
+{
+	"errCode": 200,
+	"errString": "OK"
+}
+```
+
+- 返回值说明：
+	- errCode：200 表示成功，否则为失败（坐标越界、已存在棋子、已分出胜负和 HexyBuddy 未初始化都可能导致失败）
+	- errString：具体错误原因
 
 #### 2. 读取落子记录
 
+读取 Hexy 棋盘上的棋盘状态。
+
+##### 1）请求（GET 方法）：http://localhost:8080/get/rec
+
+##### 2）响应：
+
+```json
+{
+	"errCode": 200,
+	"errString": "OK",
+	"records": [
+		{"col": 6, "row": 3},
+		{"col": 4, "row": 4},
+		{"col": 2, "row": 7},
+		{"col": 4, "row": 8},
+		{"col": 5, "row": 8},
+		{"col": 8, "row": 4},
+		{"col": 6, "row": 6},
+		{"col": 4, "row": 6}
+	]
+}
+```
+
+- 返回值说明：
+	- records：按照**落子顺序**列出的落子记录数组
+
 #### 3. 读取棋盘尺寸
+
+读取 Hexy 棋盘尺寸。
+
+##### 1）请求（GET 方法）：http://localhost:8080/get/boardsize
+
+##### 2）响应：
+
+```json
+{
+	"errCode": 200,
+	"errString": "OK",
+	"boardsize": 11
+}
+```
+
+- 返回值说明：
+	- boardsize：棋盘尺寸
 
 #### 4. 读取棋局是否结束
 
+读取判断 Hexy 棋局是否分出胜负
+
+##### 1）请求（GET 方法）：http://localhost:8080/get/gameoverflag
+
+##### 2）响应：
+
+```json
+{
+	"errCode": 200,
+	"errString": "OK",
+	"gameover": false
+}
+```
+
+- 返回值说明：
+	- gameover：是否分出胜负
+
 #### 5. 读取棋盘上现有棋子数
+
+读取棋盘上现有棋子数。
+
+##### 1）请求（GET 方法）：http://localhost:8080/get/pawnnum
+
+##### 2）响应：
+
+```json
+{
+	"errCode": 200,
+	"errString": "OK",
+	"num": 8
+}
+```
+
+- 返回值说明：
+	- num：Hexy 棋盘上现有棋子数
 
 #### 6. 重新开始
 
+清理棋局并重新开始。
+
+##### 1）请求（GET 方法）：http://localhost:8080/msg/newgame
+
+##### 2）响应：
+
+```json
+{
+	"errCode": 200,
+	"errString": "OK"
+}
+```
+
 #### 7. 设置棋盘尺寸
+
+设置棋盘尺寸，如果与之前设定不同，则重新开始。
+
+##### 1）请求（GET 方法）：http://localhost:8080/msg/size?size=11
+
+- 参数说明：
+	- size：棋盘尺寸
+
+##### 2）请求（POST 方法）：http://localhost:8080/msg/size
+
+- 请求体：
+```json
+{
+	size: 11
+}
+```
+
+- 参数说明：
+	- size：棋盘尺寸
+
+##### 3）响应：
+
+```json
+{
+	"errCode": 200,
+	"errString": "OK"
+}
+```
 
 #### 8. 打开或关闭 Hexy AI 自动落子
 
+打开或关闭 Hexy AI 自动落子功能。
+
+##### 1）请求（GET 方法）：http://localhost:8080/msg/hexy/on 或http://localhost:8080/msg/hexy/off
+
+##### 2）响应：
+
+```json
+{
+	"errCode": 200,
+	"errString": "OK"
+}
+```
+
 #### 9. 由 Hexy 进行下一步落子
 
+由 Hexy 的 AI 进行下一步落子。不阻塞，可以通过请求 http://localhost:8080/get/pawnnum 监视落子数，来判断 Hexy 是否已完成落子。
 
+##### 1）请求（GET 方法）：http://localhost:8080/msg/move
+
+##### 2）响应：
+
+```json
+{
+	"errCode": 200,
+	"errString": "OK"
+}
+```
