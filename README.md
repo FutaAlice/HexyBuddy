@@ -17,7 +17,7 @@ HexyBuddy 可以完成如下功能：
 
 ## 演示
 
-![preview](https://github.com/FutaAlice/HexyBuddy/blob/master/preview.gif)
+![preview](./preview.gif)
 
 
 
