@@ -13,6 +13,14 @@ HexyBuddy 可以完成如下功能：
 
 *Warning：*本程序设计初衷是为 Hexy 提供一个与其他程序自动博弈的接口。请勿用 watchcat 等工具隐藏 Hexy 用于其他非正当用途。
 
+
+
+## 演示
+
+![preview](https://github.com/FutaAlice/HexyBuddy/blob/master/preview.gif)
+
+
+
 ## 工程结构
 
 ### 目录结构
@@ -57,6 +65,8 @@ HTTP 库，header-only，供 httpsrv 调用。
 5. 打开 Chrome 访问 http://localhost:8080/init
 6. 如果页面显示：{"errCode": 200, "errString": "OK"}，说明运行成功。
 7. 参考协议文档通过浏览器提交请求控制 Hexy。Have fun ：）
+
+
 
 ## 协议及调用规范
 
