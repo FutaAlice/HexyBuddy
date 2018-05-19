@@ -25,12 +25,12 @@ HexyBuddy 可以完成如下功能：
 
 ### 目录结构
 
-/HexyBuddy/
-  |-- cpp-httplib/
-  |-- json11/
-  |-- hexybuddy/
-  |-- httpsrv/
-  |-- HexyBuddy.sln/
+- HexyBuddy/
+	- cpp-httplib/
+	- json11/
+	- hexybuddy/
+	- httpsrv/
+	- HexyBuddy.sln/
 
 ### 各模块功能简介
 
