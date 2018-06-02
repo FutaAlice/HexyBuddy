@@ -11,7 +11,8 @@ HexyBuddy 可以完成如下功能：
 * 模拟 Hexy 菜单消息事件（重新开始、设置 AI 难度、改变棋盘尺寸和要求 Hexy 落子 等控制命令）
 * 显示 Hexy 对当前局面的估值
 
-*Warning：*本程序设计初衷是为 Hexy 提供一个与其他程序自动博弈的接口。请勿用 watchcat 等工具隐藏 Hexy 用于其他非正当用途。
+
+*Warning:* 本程序设计初衷是为 Hexy 提供一个与其他程序自动博弈的接口。请勿用 watchcat 等工具隐藏 Hexy 用于其他非正当用途。
 
 
 
@@ -100,6 +101,7 @@ httpsrv 默认监听本机的 **8080** 端口的 HTTP 请求，运行前需确�
 | :---:   | :----------  | :---------- |
 | GET | /init | 初始化并寻找正在运行的 Hexy 实例 |
 | GET/POST | /set/piece | 在 Hexy 当前棋盘上落子 |
+| GET/POST | /set/wait | 在 Hexy 当前棋盘上落子,阻塞等待并返回 Hexu 落子位置 |
 | GET | /get/rec | 获取 Hexy 当前棋盘上的所有落子记录 |
 | GET | /get/pawnnum | 读取棋盘上现有棋子数 |
 | GET | /get/boardsize | 读取棋盘尺寸 |
