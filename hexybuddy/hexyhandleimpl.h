@@ -44,6 +44,8 @@ public:
 
     bool setPiece(const std::tuple<int, int> &); // 落子，输入参数 tuple<col, row>, 返回 true 表示成功
     void msgOrigin(hexybuddy::Command cmd);      // 向 Hexy 窗体句柄发送控制命令
+
+    const std::tuple<int, int> setPieceAndWait(const std::tuple<int, int> &);
 private:
     /**
      * @brief 判断 Hexy 是否仍在运行

@@ -63,6 +63,8 @@ public:
     */
     void msgOrigin(Command cmd);
 
+    const std::tuple<int, int> setPieceAndWait(const std::tuple<int, int> &);
+
     /**
     * @brief 清理棋盘并重新开始
     *

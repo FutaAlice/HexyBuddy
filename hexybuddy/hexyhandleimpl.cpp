@@ -1,6 +1,9 @@
 #include <functional>
 #include <memory>
+#include <chrono>
+#include <thread>
 #include "hexyhandleimpl.h"
+#include "msgdef.h"
 using namespace std;
 
 bool HexyHandleImpl::init() {
@@ -179,4 +182,31 @@ void HexyHandleImpl::msgOrigin(hexybuddy::Command cmd) {
     SendMessage(targetWnd_, WM_COMMAND, static_cast<unsigned>(cmd), 0);
 
     SetCursorPos(pt.x, pt.y);
+}
+
+const std::tuple<int, int> HexyHandleImpl::setPieceAndWait(const std::tuple<int, int> &pos) {
+    using namespace hexybuddy;
+    msgOrigin(Command::SwapOff);
+    msgOrigin(Command::HexyOff);
+    msgOrigin(Command::Score);
+
+    auto pawnNum = getPawnNum();
+    if (!setPiece(pos)) {
+        throw "position illegal not empty!";
+    }
+    pawnNum++;
+    msgOrigin(Command::Move);
+    
+    const auto timeLimit = chrono::seconds(8);
+    auto timeCost = chrono::milliseconds(0);
+    while (pawnNum == getPawnNum()) {
+        auto timeSleepFor = chrono::milliseconds(200);
+        this_thread::sleep_for(timeSleepFor);
+        timeCost += timeSleepFor;
+        if (timeCost > timeLimit)
+            throw "timeout!";
+    }
+
+    auto rec = getRec();
+    return rec[rec.size() - 1];
 }

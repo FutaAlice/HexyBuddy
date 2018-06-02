@@ -48,6 +48,8 @@ void setMessageRouter(Server &srv) {
 
     srv.Get ("/set/piece", HexySetPiece);
     srv.Post("/set/piece", HexySetPiece);
+    srv.Get ("/set/wait",  HexySetPieceAndWait);
+    srv.Post("/set/wait",  HexySetPieceAndWait);
 
     srv.Get ("/msg/origin",         HexyMsgOrigin);
     srv.Post("/msg/origin",         HexyMsgOrigin);

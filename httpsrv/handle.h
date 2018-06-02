@@ -12,6 +12,7 @@ void HexyGetPawnNum         (const httplib::Request &req, httplib::Response &res
 void HexyGetBoardSize       (const httplib::Request &req, httplib::Response &res);
 
 void HexySetPiece           (const httplib::Request &req, httplib::Response &res);
+void HexySetPieceAndWait    (const httplib::Request &req, httplib::Response &res);
 
 void HexyMsgOrigin          (const httplib::Request &req, httplib::Response &res);
 void HexyMsgNewGame         (const httplib::Request &req, httplib::Response &res);

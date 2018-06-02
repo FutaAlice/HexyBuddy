@@ -246,6 +246,51 @@ void HexySetPiece(const Request &req, Response &res) {
     JsonSetResp(obj, res);
 }
 
+void HexySetPieceAndWait(const httplib::Request &req, httplib::Response &res) {
+    ErrorStatus err;
+    tuple<int, int> move = { 0, 0 };
+    do {
+        int row, col;
+        if ("POST" == req.method) {
+            Json obj = Json::parse(req.body, err.str);
+            if (!obj.is_object()) {
+                err.code = 400;
+                break;
+            }
+            if (!obj["row"].is_number() || !obj["col"].is_number()) {
+                err = { 400, R"(Param: row/col is required.)" };
+                break;
+            }
+            row = obj["row"].int_value();
+            col = obj["col"].int_value();
+        }
+        // GET
+        else {
+            if (req.params.end() == req.params.find("row") ||
+                req.params.end() == req.params.find("col")) {
+                err = { 400, R"(Param: row/col is required.)" };
+                break;
+            }
+            row = atoi(req.params.find("row")->second.c_str());
+            col = atoi(req.params.find("col")->second.c_str());
+        }
+
+        try {
+            move = handle.setPieceAndWait(make_tuple(col, row));
+
+        }
+        catch (const char *errString) {
+            err = { 400, errString };
+        }
+
+    } while (0);
+
+    Json obj = Json(err);
+    JsonAddItem(obj, "col", get<0>(move));
+    JsonAddItem(obj, "row", get<1>(move));
+    JsonSetResp(obj, res);
+}
+
 void HexyMsgOrigin(const Request &req, Response &res) {
     ErrorStatus err;
     do {

@@ -38,6 +38,11 @@ void HexyHandle::msgOrigin(Command cmd) {
     pimpl_->msgOrigin(cmd);
 }
 
+const std::tuple<int, int>
+HexyHandle::setPieceAndWait(const std::tuple<int, int>&pos) {
+    return pimpl_->setPieceAndWait(pos);
+}
+
 void HexyHandle::msgNewGame() {
     pimpl_->msgOrigin(Command::NewGame);
 }
