@@ -208,5 +208,8 @@ const std::tuple<int, int> HexyHandleImpl::setPieceAndWait(const std::tuple<int,
     }
 
     auto rec = getRec();
+    if (rec.empty())
+        throw "unknown error occurred!";
+
     return rec[rec.size() - 1];
 }
